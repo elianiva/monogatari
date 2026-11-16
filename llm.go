@@ -116,7 +116,7 @@ func pickAdapter() adapter {
 		}
 		return adapter{
 			name: "custom", url: base + "/chat/completions", key: tok, keyEnv: "AUTH_TOKEN",
-			defaultModel: "gpt-6-luna",
+			defaultModel: "gemini-3.8-flash",
 			headers:      map[string]string{"User-Agent": "monogatari/1.0"},
 		}
 	case "":

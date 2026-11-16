@@ -51,6 +51,21 @@ func TestPickAdapter(t *testing.T) {
 			[]string{"deepseek/deepseek-v4.1-flash-1017"},
 			map[string]string{"OPENROUTER_API_KEY": "or-key", "GEMINI_API_KEY": "g-key", "LLM_PROVIDER": "openrouter"},
 		},
+		{
+			"opencode go key", "opencode-go", "oc-key",
+			[]string{"longcat-2.5-free"},
+			map[string]string{"OPENCODE_API_KEY": "oc-key"},
+		},
+		{
+			"custom proxy token", "custom", "tok",
+			[]string{"gemini-3.8-flash"},
+			map[string]string{"AUTH_TOKEN": "tok"},
+		},
+		{
+			"forced custom beats a gemini key", "custom", "tok",
+			[]string{"gemini-3.8-flash"},
+			map[string]string{"GEMINI_API_KEY": "g-key", "AUTH_TOKEN": "tok", "LLM_PROVIDER": "custom"},
+		},
 		{"no key plays the mock", "", "", nil, nil},
 	}
 	for _, c := range cases {

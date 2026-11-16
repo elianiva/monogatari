@@ -75,8 +75,8 @@ All settings are environment variables.
 | `GEMINI_API_KEY` | none | Turns on real generation through Gemini. `GOOGLE_API_KEY` works too. The free tier allows 5 requests a minute per model, so the default list spans two models; set `JUDGE=off` there to halve the calls |
 | `OPENCODE_API_KEY` | none | Turns on real generation through OpenCode Go, on `longcat-2.5-free` by default |
 | `BASE_URL` | `https://ai.naufal.work` | Base URL for `custom`, an OpenAI-compatible proxy. `/v1` is added when missing |
-| `AUTH_TOKEN` | none | Token for `custom`. Turns on real generation through that proxy, on `gpt-6-luna` by default |
-| `MODELS` | per provider | Comma-separated model ids, `deepseek/deepseek-v4.1-flash-1017` on OpenRouter, `gemini-3.6-flash,gemini-3.5-flash` on Gemini, `longcat-2.5-free` on OpenCode Go, and `gpt-6-luna` on `custom`. Retries rotate through the list |
+| `AUTH_TOKEN` | none | Token for `custom`. Turns on real generation through that proxy, on `gemini-3.8-flash` by default |
+| `MODELS` | per provider | Comma-separated model ids, `deepseek/deepseek-v4.1-flash-1017` on OpenRouter, `gemini-3.6-flash,gemini-3.5-flash` on Gemini, `longcat-2.5-free` on OpenCode Go, and `gemini-3.8-flash` on `custom`. Retries rotate through the list |
 | `PROVIDER` | `stepfun` | OpenRouter upstream provider to pin. Empty turns pinning off. If the provider is down, requests fail. Ignored by Gemini |
 | `REASONING` | `low` | Reasoning effort sent to the model on OpenRouter. `off` omits it. Ignored by Gemini |
 | `JUDGE` | on | `off` skips the review call for each line |
