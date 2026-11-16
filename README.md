@@ -2,7 +2,7 @@
 
 A multiplayer Japanese sentence-ordering game, played like a visual novel. Players of different JLPT levels join one room, and an AI writes a short story for them. Each player is one character. On your turn you put the words of your line in order, read it aloud, and answer a quiz about it. Everyone else watches live and helps by voice. It is made to be played on a voice call, for example on Discord, and a game takes about 10 to 15 minutes.
 
-Go server, [Datastar](https://data-star.dev) UI, [templ](https://templ.guide) views, stories from [OpenRouter](https://openrouter.ai).
+Go server, [Datastar](https://data-star.dev) UI, [templ](https://templ.guide) views, stories from OpenRouter, Gemini, or OpenCode Go.
 
 ## Screenshots
 
@@ -37,14 +37,14 @@ The in-app **How to play** button explains the same in more detail.
 
 - Go 1.26 or newer
 - [templ](https://templ.guide/quick-start/installation) (`go install github.com/a-h/templ/cmd/templ@latest`), only to edit `views.templ`
-- An OpenRouter API key for real stories. Without one the app plays a built-in mock story, which is enough to try the game and work on the UI.
+- An [OpenRouter](https://openrouter.ai), [Google AI Studio](https://aistudio.google.com), or [OpenCode Go](https://opencode.ai/docs/console/go/) API key for real stories. Without one the app plays a built-in mock story, which is enough to try the game and work on the UI.
 
 ## Setup
 
 ```sh
 git clone https://ampcode.com/@elianiva/monogatari
 cd monogatari
-cp .env.example .env        # add OPENROUTER_API_KEY
+cp .env.example .env        # add OPENROUTER_API_KEY, GEMINI_API_KEY or OPENCODE_API_KEY
 set -a; . ./.env; set +a
 make run                    # http://localhost:8080
 ```
@@ -70,10 +70,15 @@ All settings are environment variables.
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `OPENROUTER_API_KEY` | none | Turns on real generation |
-| `MODELS` | `deepseek/deepseek-v4.1-flash-1017` | Comma-separated model ids. Retries rotate through the list |
-| `PROVIDER` | `stepfun` | OpenRouter provider to pin. Empty turns pinning off. If the provider is down, requests fail |
-| `REASONING` | `low` | Reasoning effort sent to the model. `off` omits it |
+| `LLM_PROVIDER` | auto | `openrouter`, `gemini`, `opencode-go` or `custom`. Empty uses whichever key is set |
+| `OPENROUTER_API_KEY` | none | Turns on real generation through OpenRouter |
+| `GEMINI_API_KEY` | none | Turns on real generation through Gemini. `GOOGLE_API_KEY` works too. The free tier allows 5 requests a minute per model, so the default list spans two models; set `JUDGE=off` there to halve the calls |
+| `OPENCODE_API_KEY` | none | Turns on real generation through OpenCode Go, on `longcat-2.5-free` by default |
+| `BASE_URL` | `https://ai.naufal.work` | Base URL for `custom`, an OpenAI-compatible proxy. `/v1` is added when missing |
+| `AUTH_TOKEN` | none | Token for `custom`. Turns on real generation through that proxy, on `gpt-6-luna` by default |
+| `MODELS` | per provider | Comma-separated model ids, `deepseek/deepseek-v4.1-flash-1017` on OpenRouter, `gemini-3.6-flash,gemini-3.5-flash` on Gemini, `longcat-2.5-free` on OpenCode Go, and `gpt-6-luna` on `custom`. Retries rotate through the list |
+| `PROVIDER` | `stepfun` | OpenRouter upstream provider to pin. Empty turns pinning off. If the provider is down, requests fail. Ignored by Gemini |
+| `REASONING` | `low` | Reasoning effort sent to the model on OpenRouter. `off` omits it. Ignored by Gemini |
 | `JUDGE` | on | `off` skips the review call for each line |
 | `ROOM_PASSPHRASE` | none | If set, the whole app shows only a passphrase screen until it is entered. Wrong tries are limited to 5 per 10 minutes per address |
 | `MAX_GAMES_PER_HOUR` | `10` | Cap on stories started per hour |
@@ -98,7 +103,7 @@ Set `ROOM_PASSPHRASE` before putting the app on a public address: without it, an
 |---|---|
 | `main.go` | HTTP routes, SSE stream |
 | `room.go` | Room state machine: lobby, turns, auto-play, scoring |
-| `llm.go` | OpenRouter client, generation, validation retries, review call |
+| `llm.go` | Provider adapters, generation, validation retries, review call |
 | `model.go` | Data types, levels, furigana parsing, line checks |
 | `views_*.templ`, `views.go` | Pages, one file per screen: shell, lobby, briefing, play, wrap-up |
 | `prompts/` | Prompt templates for plan, script, single line and review |

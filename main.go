@@ -234,10 +234,10 @@ func main() {
 		room.MaxGames = n
 	}
 	port := envOr("PORT", "8080")
-	if apiKey == "" {
-		log.Println("OPENROUTER_API_KEY not set: using the offline mock story")
+	if llm.key == "" {
+		log.Printf("no usable LLM key (%s): using the offline mock story", llm.keyEnv)
 	} else {
-		log.Printf("models: %v, provider: %q, reasoning: %q, judge: %v", models, provider, reasoning, judgeOn)
+		log.Printf("%s: models %v, judge %v", llm.name, models, judgeOn)
 	}
 	if room.Pass == "" {
 		log.Println("ROOM_PASSPHRASE not set: anyone with the link can join")
